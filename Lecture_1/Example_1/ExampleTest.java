@@ -28,15 +28,16 @@ public class ExampleTest
 
   public static void main(String[] args)
   {
-    System.out.println("Available Proceccors: "+Runtime.getRuntime().availableProcessors());
-
     double[] array = getArray();
     Example example = new Example();
 
-    //System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "8");
+    //System.out.println("Available Proceccors: "+Runtime.getRuntime().availableProcessors());
+    System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "4");
     //System.out.println("get parallelism = " +ForkJoinPool.commonPool().getParallelism());
 
     double sum1 = example.getSequentialSum(array);
-    double sum2 = example.getParallelSum(array);
+    double sum2 = example.getParallelSumAction(array);
+    double sum3 = example.getParallelSumTask(array);
+
   }
 }

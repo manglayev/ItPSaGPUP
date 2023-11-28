@@ -1,62 +1,35 @@
-import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.ForkJoinPool;
 
 public class Example
 {
-  private static class ArraySumTask extends RecursiveAction
+  public double getParallelSumAction(double array[])
   {
-    int start;
-    int end;
-    double [] array;
-    double sum;
-    public static int SEQUENTIAL_THRESHOLD = 100;
-    ArraySumTask(int start, int end, double[] array)
-    {
-      this.start = start;
-      this.end = end;
-      this.array = array;
-    }
-
-    public double getSum()
-    {
-      return sum;
-    }
-
-    @Override
-    protected void compute()
-    {
-      if(end - start <= SEQUENTIAL_THRESHOLD)
-      {
-        for(int a = start; a < end; a++)
-        {
-          sum += 1 / array[a];
-        }
-      }
-      else
-      {
-        ArraySumTask left = new ArraySumTask(start, (start + end)/2, array);
-        ArraySumTask right = new ArraySumTask((start + end)/2, end, array);
-        left.fork();
-        right.compute();
-        left.join();
-        sum = left.getSum() + right.getSum();
-      }
-    }
+    long startTime = System.nanoTime();
+    ArraySumAction ast = new ArraySumAction(0, array.length, array);
+    //this way
+    //play with the number of threads
+    //ForkJoinPool pool = new ForkJoinPool(4);
+    //pool.invoke(ast);
+    //or this way
+    ForkJoinPool.commonPool().invoke(ast);
+    double sum = ast.getSum();
+    long endTime = System.nanoTime() - startTime;
+    printResults("  Parallel Action", endTime, sum);
+    return sum;
   }
 
-  public double getParallelSum(double array[])
+  public double getParallelSumTask(double array[])
   {
     long startTime = System.nanoTime();
     ArraySumTask ast = new ArraySumTask(0, array.length, array);
     //this way
     //play with the number of threads
-    ForkJoinPool pool = new ForkJoinPool(4);
-    pool.invoke(ast);
+    //ForkJoinPool pool = new ForkJoinPool(4);
+    //pool.invoke(ast);
     //or this way
-    //ForkJoinPool.commonPool().invoke(ast);
-    double sum = ast.getSum();
+    double sum = ForkJoinPool.commonPool().invoke(ast);
     long endTime = System.nanoTime() - startTime;
-    printResults("  Parallel", endTime, sum);
+    printResults("  Parallel Task", endTime, sum);
     return sum;
   }
 
