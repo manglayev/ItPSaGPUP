@@ -1,4 +1,4 @@
-# ItPSaGPUS
+# ItPSaGPUP
 Introduction to Parallel Systems and GPU Programming
 
 in order to run particular example:
