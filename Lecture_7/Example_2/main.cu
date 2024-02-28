@@ -35,7 +35,7 @@ int main()
   cudaMalloc((void**)&dev_b, sizeof(float));
   cudaMemcpy(dev_b, &b, sizeof(float), cudaMemcpyHostToDevice);
 
-  orange c = 77;
+  orange c = 75;
   orange *dev_c;
   cudaMalloc((void**)&dev_c, sizeof(orange));
   cudaMemcpy(dev_c, &c, sizeof(orange), cudaMemcpyHostToDevice);
