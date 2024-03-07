@@ -8,6 +8,8 @@
 #define THREADS 5
 #define BLOCKS 1
 
+#define CUDA_HOSTDEV __host__ __device__
+
 template <typename T> class Array
 {
   private:
@@ -15,11 +17,11 @@ template <typename T> class Array
 	  int size;
 
   public:
-    __host__ __device__ Array(T arr[], int s);
-    __host__ __device__ void print();
+    CUDA_HOSTDEV Array(T arr[], int s);
+    CUDA_HOSTDEV void print();
 };
 
-template <class T> __host__ __device__ Array<T>::Array(T arr[], int s)
+template <class T> CUDA_HOSTDEV Array<T>::Array(T arr[], int s)
 {
 	ptr = new T[s];
 	size = s;
@@ -27,7 +29,7 @@ template <class T> __host__ __device__ Array<T>::Array(T arr[], int s)
 		ptr[i] = arr[i];
 }
 
-template <class T> __host__ __device__ void Array<T>::print()
+template <class T> CUDA_HOSTDEV void Array<T>::print()
 {
     for (int i = 0; i < size; i++)
       printf(" %d", *(ptr + i));
@@ -48,12 +50,12 @@ __global__ void globalFunction(int *x)
 
 int main()
 {
-  //C++ version
+  //HOST
   int arr[THREADS] = { 1, 2, 3, 4, 5 };
   Array<int> array(arr, THREADS);
   printf("PRINT FROM HOST:\n");
   array.print();
-  //CUDA version
+  //KERNEL
   int *dev_a;
   cudaMallocManaged(&dev_a, sizeof(int));
   dev_a[0] = THREADS;
